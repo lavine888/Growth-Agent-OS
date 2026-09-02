@@ -1,0 +1,23 @@
+{
+  "name": "product_growth_funnel",
+  "steps": [
+    "lead_created",
+    "trial_booked",
+    "trial_attended",
+    "first_valid_speech",
+    "lesson_completed",
+    "parent_report_viewed",
+    "purchase_completed",
+    "lesson_2_booked"
+  ],
+  "owners": {
+    "lead_created": "acquisition",
+    "trial_booked": "acquisition",
+    "trial_attended": "activation",
+    "first_valid_speech": "activation",
+    "lesson_completed": "activation",
+    "parent_report_viewed": "revenue",
+    "purchase_completed": "revenue",
+    "lesson_2_booked": "retention"
+  }
+}

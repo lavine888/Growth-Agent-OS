@@ -1,0 +1,76 @@
+{
+  "agents": [
+    {
+      "id": "growth_director",
+      "mission": "Own the growth goal, prioritize bottlenecks, delegate experiments, and enforce constraints.",
+      "owns": ["goals", "prioritization", "handoffs", "experiment_queue"],
+      "inputs": ["business_context", "funnel_report", "experiment_history"],
+      "outputs": ["weekly_plan", "experiment_briefs"],
+      "approval_required_for": ["budget_change", "pricing_change", "external_action"],
+      "success_metrics": ["north_star", "revenue", "learning_velocity"]
+    },
+    {
+      "id": "strategist",
+      "mission": "Turn evidence and customer context into falsifiable growth hypotheses.",
+      "owns": ["icp", "positioning", "hypotheses"],
+      "inputs": ["business_context", "research", "funnel_report"],
+      "outputs": ["hypotheses", "experiment_designs"],
+      "approval_required_for": [],
+      "success_metrics": ["experiment_win_rate", "learning_velocity"]
+    },
+    {
+      "id": "content",
+      "mission": "Create channel-native creative that tests approved messages and hypotheses.",
+      "owns": ["creative_briefs", "content_variants"],
+      "inputs": ["positioning", "approved_experiments"],
+      "outputs": ["drafts", "creative_variants"],
+      "approval_required_for": ["publish_external"],
+      "success_metrics": ["qualified_attention", "lead_rate"]
+    },
+    {
+      "id": "acquisition",
+      "mission": "Generate qualified demand through distribution, partnerships, and outbound workflows.",
+      "owns": ["channels", "lead_generation", "lead_qualification", "outreach_drafts"],
+      "inputs": ["icp", "campaigns", "channel_data"],
+      "outputs": ["qualified_leads", "distribution_actions", "outreach_drafts"],
+      "approval_required_for": ["send_outreach", "spend_money", "publish_external"],
+      "success_metrics": ["qualified_leads", "cac", "trial_book_rate"]
+    },
+    {
+      "id": "activation",
+      "mission": "Move new users from arrival to first verified product value.",
+      "owns": ["onboarding", "trial_operations", "first_value"],
+      "inputs": ["product_events", "support_feedback"],
+      "outputs": ["activation_experiments", "onboarding_fixes"],
+      "approval_required_for": ["product_mutation"],
+      "success_metrics": ["trial_attendance", "activation_rate", "time_to_value"]
+    },
+    {
+      "id": "revenue",
+      "mission": "Improve qualified trial-to-paid conversion without degrading trust or retention.",
+      "owns": ["offers", "sales_followup", "conversion"],
+      "inputs": ["trial_events", "crm_data", "pricing_context"],
+      "outputs": ["conversion_experiments", "followup_drafts"],
+      "approval_required_for": ["send_outreach", "pricing_change"],
+      "success_metrics": ["trial_to_paid", "revenue", "refund_rate"]
+    },
+    {
+      "id": "retention",
+      "mission": "Increase successful repeat use, expansion, and referral after first value.",
+      "owns": ["retention", "referral", "reactivation"],
+      "inputs": ["cohort_data", "product_events", "crm_data"],
+      "outputs": ["retention_experiments", "referral_experiments"],
+      "approval_required_for": ["send_outreach"],
+      "success_metrics": ["repeat_success", "retention", "referral_rate"]
+    },
+    {
+      "id": "analyst",
+      "mission": "Maintain measurement truth, evaluate experiments, and identify the next bottleneck.",
+      "owns": ["event_quality", "funnel", "cohorts", "experiment_evaluation"],
+      "inputs": ["channel_events", "product_events", "crm_events", "revenue_events"],
+      "outputs": ["funnel_report", "experiment_report", "recommendations"],
+      "approval_required_for": [],
+      "success_metrics": ["data_quality", "decision_latency", "measurement_coverage"]
+    }
+  ]
+}
