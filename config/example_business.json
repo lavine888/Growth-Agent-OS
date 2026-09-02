@@ -1,0 +1,13 @@
+{
+  "name": "Example Product",
+  "product": "AI-native learning product",
+  "goal": "Generate 100 qualified trial leads in 30 days",
+  "icp": "Parents of children aged 7-11 who value interactive English learning",
+  "channels": ["xiaohongshu", "wechat", "offline-events"],
+  "constraints": [
+    "No external publishing without human approval",
+    "No paid media spend without human approval",
+    "Respect platform terms and user privacy"
+  ],
+  "metrics": ["qualified_leads", "trial_bookings", "lead_to_trial_rate"]
+}
