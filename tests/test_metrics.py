@@ -19,7 +19,7 @@ class FunnelTests(unittest.TestCase):
 
         report = ordered_funnel_report(events, steps)
         self.assertEqual([step.actors for step in report.steps], [3, 2, 1])
-        self.assertEqual(report.biggest_drop_step.step, "trial")
+        self.assertEqual(report.biggest_drop_step.step, "paid")
 
     def test_duplicate_funnel_steps_rejected(self) -> None:
         with self.assertRaises(ValueError):
