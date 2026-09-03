@@ -2,7 +2,7 @@
 
 > An open-source operating system for AI-native growth teams: **goal → experiment → acquire → activate → convert → retain → learn**.
 
-Growth Agent OS is not another marketing chatbot. It is a control plane for running measurable growth loops with multiple agents, shared business context, first-party product events, and human approval gates.
+Growth Agent OS is not another marketing chatbot. It is a control plane for running measurable growth loops with multiple agents, shared business context, first-party product events, experiments, adapters, and human approval gates.
 
 This repository is a V2 rebuild around four ideas:
 
@@ -49,21 +49,22 @@ Growth Agent OS treats growth as a closed-loop control problem:
                            └──────────────↺
 ```
 
-## V0.2: runnable foundation
+## V0.3: execution substrate
 
-The current milestone intentionally starts deterministic before adding LLM autonomy. It provides:
+The system now has a deterministic execution substrate before LLM autonomy is introduced:
 
 - explicit agent roles and ownership;
 - shared product / ICP / positioning / metric context;
-- an ordered product-growth funnel;
-- JSONL event ingestion;
-- funnel conversion analysis;
-- bottleneck detection;
-- a deterministic next-action planner;
-- CI tests;
-- approval boundaries for external actions.
+- canonical first-party product event contract;
+- ordered funnel conversion and bottleneck analysis;
+- event adapter interface for external systems;
+- append-only JSONL ingestion;
+- experiment lifecycle (`draft → running → paused/completed`);
+- approval queue for external mutations;
+- deterministic owner / next-action planner;
+- CI unit and CLI smoke tests.
 
-This gives future LLM agents a stable operating substrate instead of letting prompts become the architecture.
+The point is to make LLMs replaceable execution engines rather than the system of record.
 
 ## Quick start
 
@@ -79,7 +80,20 @@ growth-os report examples/events.jsonl
 growth-os plan examples/events.jsonl
 ```
 
-Example output will identify the largest funnel bottleneck and assign an owner rather than simply generating more content.
+Ingest a new product event:
+
+```bash
+cat > /tmp/event.json <<'JSON'
+{
+  "actor_id": "family_101",
+  "event": "trial_booked",
+  "source": "landing_page",
+  "properties": {"campaign": "minecraft_demo"}
+}
+JSON
+
+growth-os ingest /tmp/event.json --out data/events.jsonl
+```
 
 ## Repository layout
 
@@ -96,10 +110,14 @@ Growth-Agent-OS/
 ├── examples/
 │   └── events.jsonl         # first-party event example
 ├── src/growth_agent_os/
-│   ├── cli.py
-│   ├── metrics.py
-│   ├── models.py
-│   └── orchestrator.py
+│   ├── adapters.py          # external system → canonical Event boundary
+│   ├── approvals.py         # human approval queue
+│   ├── cli.py               # local control plane
+│   ├── experiments.py       # experiment lifecycle
+│   ├── ingestion.py         # append-only event ingestion
+│   ├── metrics.py           # funnel analytics
+│   ├── models.py            # canonical data models
+│   └── orchestrator.py      # planning / ownership logic
 ├── tests/
 ├── ARCHITECTURE.md
 └── ROADMAP.md
@@ -118,17 +136,15 @@ Growth-Agent-OS/
 | Retention | repeat use and referral | retention / referral experiments |
 | Analyst | event data and experiment evaluation | funnel report, next-step recommendation |
 
-External publishing, outreach, spend, and destructive CRM actions require human approval by default.
-
 ## Event contract
 
-One line per event:
+One line per canonical event:
 
 ```json
 {"actor_id":"family_001","event":"trial_attended","timestamp":"2026-09-02T09:30:00Z","source":"offline_demo","properties":{"lesson":"lesson_01"}}
 ```
 
-The default funnel is configurable and intentionally product-centric:
+The default product-centric funnel is configurable:
 
 ```text
 lead_created
@@ -141,7 +157,30 @@ lead_created
 → lesson_2_booked
 ```
 
-Replace these events for another product without changing the core engine.
+For another product, replace the funnel configuration and adapters without changing the analytics engine.
+
+## Adapter contract
+
+External sources should not leak vendor-specific schemas into the core. Each integration normalizes upstream data into the canonical `Event` model:
+
+```text
+Minecraft Runtime ─┐
+CRM / Sales ───────┼─> EventAdapter ─> Event Store ─> Funnel / Experiment Engine
+Website / GA4 ─────┘
+```
+
+The included `MappingAdapter` is intentionally small. Concrete adapters for Minecraft Runtime, CRM and analytics systems should live behind the same interface.
+
+## Human approval boundary
+
+Read, analyze, plan and draft operations can be automated. External mutations should enter the approval queue first, including:
+
+- publishing content;
+- outbound messages;
+- ad spend;
+- pricing changes;
+- CRM destructive writes;
+- any action with material reputational or financial impact.
 
 ## Design principles
 
@@ -156,7 +195,14 @@ Replace these events for another product without changing the core engine.
 
 ## Next
 
-See [ROADMAP.md](ROADMAP.md). The next engineering milestone is the adapter layer: website analytics, CRM, content channels, and product-runtime events, followed by an LLM provider interface and approval queue.
+The next milestone is **V0.4: real adapters + experiment persistence**:
+
+1. Minecraft Runtime webhook adapter;
+2. website / analytics adapter;
+3. CRM lead adapter;
+4. persistent experiment store;
+5. approval persistence and audit log;
+6. LLM provider interface after the deterministic control plane is stable.
 
 ## Status
 
