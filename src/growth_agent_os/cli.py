@@ -4,6 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
+from .ingestion import ingest_payload
 from .orchestrator import GrowthOS
 
 
@@ -29,6 +30,10 @@ def build_parser() -> argparse.ArgumentParser:
     agents = subparsers.add_parser("agents", help="List configured agents")
     agents.add_argument("--json", action="store_true", dest="as_json")
 
+    ingest = subparsers.add_parser("ingest", help="Append one canonical event payload to a JSONL event store")
+    ingest.add_argument("payload", type=Path, help="JSON file containing one event object")
+    ingest.add_argument("--out", type=Path, required=True, help="Destination JSONL event store")
+
     report = subparsers.add_parser("report", help="Calculate the ordered growth funnel")
     report.add_argument("events", type=Path)
     report.add_argument("--json", action="store_true", dest="as_json")
@@ -49,6 +54,15 @@ def main(argv: list[str] | None = None) -> int:
         else:
             for agent in os.agents:
                 print(f"{agent['id']:<18} {agent['mission']}")
+        return 0
+
+    if args.command == "ingest":
+        with args.payload.open("r", encoding="utf-8") as handle:
+            payload = json.load(handle)
+        if not isinstance(payload, dict):
+            raise ValueError("ingest payload must be a JSON object")
+        count = ingest_payload(payload, args.out)
+        print(f"Ingested {count} event(s) into {args.out}")
         return 0
 
     if args.command == "report":
